@@ -64,6 +64,6 @@ fi
 
 cargo watch \
 	--clear \
-	--watch './src/' \
+	--watch './' \
 	-- \
 	"${BASH:-bash}" -- './test.sh'

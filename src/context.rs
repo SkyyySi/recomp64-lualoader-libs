@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
-use crate::table;
+use crate::module;
+#[allow(unused_imports)]
 use mlua::prelude::*;
 
 #[derive(Clone, Debug, FromLua)]
@@ -18,10 +19,6 @@ impl LuaUserData for Context {
 	}
 }
 
-#[mlua::lua_module]
-pub fn recomp64_context(lua: &Lua) -> LuaResult<LuaTable> {
-	table!(lua, {
-		// TODO
-		context = LuaNil,
-	})
-}
+module!(recomp64_context, lua, {
+	context = LuaNil,
+});

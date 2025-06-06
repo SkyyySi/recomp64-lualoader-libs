@@ -29,3 +29,14 @@ macro_rules! table {
 		::std::stringify!($key)
 	};
 }
+
+#[macro_export(local_inner_macros)]
+macro_rules! module {
+	($name:ident, $lua:ident, $body:tt $(,)?) => {
+		#[::mlua::lua_module]
+		pub fn $name($lua: &::mlua::Lua) -> ::mlua::Result<::mlua::Table> {
+			$crate::table!($lua, $body)
+				.and_then(|tb| $crate::utils::into_module($lua, (tb, (::std::stringify!($name).to_string()))))
+		}
+	};
+}
