@@ -1,0 +1,36 @@
+[package]
+name = "recomp64-lualoader-libs"
+description = "Lua-side runtime libraries for use with Recomp64-LuaLoader."
+version = "0.1.0"
+edition = "2024"
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/SkyyySi/crossterm-lua"
+authors = [
+	"SkyyySi",
+]
+# TODO: categories = [ ... ]
+
+[lib]
+name = "recomp64"
+crate-type = ["cdylib"]
+
+[features]
+default = ["mlua/lua54"]
+lua54 = ["mlua/lua54"]
+lua53 = ["mlua/lua53"]
+lua52 = ["mlua/lua52"]
+lua51 = ["mlua/lua51"]
+luajit = ["mlua/luajit"]
+luajit52 = ["mlua/luajit52"]
+
+[dependencies.mlua]
+version = "0.10.*"
+features = [
+	"anyhow",
+	"async",
+	"macros",
+	"module",
+	"serialize",
+	"userdata-wrappers",
+]
