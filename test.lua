@@ -155,3 +155,23 @@ print("Loading RDRAM dump from disk...")
 local rdram = recomp64.rdram.new_from_file("./rdram-dump.bin")
 print("Done!")
 display(rdram)
+display(rdram[123])
+local length = #rdram
+display(length, string_format("0x%08x", length))
+for i = 3, 0, -1 do
+	local index = length ~ i
+	print(string_format("rdram[0x%08x] = 0x%02x", index, rdram[index]))
+end
+display({
+	raw_data      = rdram.raw_data,
+	owns_raw_data = rdram.owns_raw_data,
+	capacity      = rdram.capacity,
+})
+
+do
+	local str = ""
+	for i = 0x0104BF1D, 0x0104BF6F do
+		str = str .. string.char(rdram[i])
+	end
+	display(str)
+end
