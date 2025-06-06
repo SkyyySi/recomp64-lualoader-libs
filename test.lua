@@ -81,7 +81,14 @@ local function repr(value, depth)
 		---@type [any, string, string][]
 		local items = {}
 		for k, v in pairs(value) do
-			items[#items+1] = { k, repr(k, depth), repr(v, depth) }
+			local key_repr
+			if type(k) == "string" and string_match(k, "^[a-zA-Z_][a-zA-Z0-9_]*$") then
+				key_repr = k
+			else
+				key_repr = "[" .. repr(k, depth) .. "]"
+			end
+
+			items[#items+1] = { k, key_repr, repr(v, depth) }
 		end
 		table_sort(items, function(a, b)
 			return a[2] < b[2]
@@ -95,15 +102,7 @@ local function repr(value, depth)
 			local key_repr   = item[2]
 			local value_repr = item[3]
 
-			result = result .. indent
-
-			if type(key) == "string" and string_match(key, "^[a-zA-Z_][a-zA-Z0-9_]*$") then
-				result = result .. key
-			else
-				result = result .. "[" .. key_repr .. "]"
-			end
-
-			result = result .. " = " .. value_repr
+			result = result .. indent .. key_repr .. " = " .. value_repr
 
 			if (i < #items) then
 				result = result .. ",\n"
@@ -115,7 +114,7 @@ local function repr(value, depth)
 				result = result .. ",\n"
 			end
 
-			result = result .. indent .. "\027[1;3;35m<>\027[0m: " .. repr(mt, depth)
+			result = result .. indent .. "\027[1;3;35m<>\027[0m = " .. repr(mt, depth)
 		end
 
 		depth  = depth - 1
@@ -131,7 +130,7 @@ local function repr(value, depth)
 end
 
 ---@param ... any
-local function pprint(...)
+local function display(...)
 	---@type { [integer]: any, n: integer }
 	local args = table_pack(...)
 
@@ -150,4 +149,9 @@ end
 --------------------------------------------------------------------------------
 
 local recomp64 = require("recomp64")
-pprint(recomp64)
+--display(recomp64)
+
+print("Loading RDRAM dump from disk...")
+local rdram = recomp64.rdram.new_from_file("./rdram-dump.bin")
+print("Done!")
+display(rdram)
